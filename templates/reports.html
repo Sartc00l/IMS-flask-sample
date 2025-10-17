@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Отчеты{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4"><i class="fas fa-chart-bar me-2"></i>Отчеты</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Отчет по остаткам</h5>
+            </div>
+            <div class="card-body">
+                <p>Отчет по текущим остаткам товаров на складе</p>
+                <button class="btn btn-outline-primary w-100" id="generateInventoryReport">
+                    <i class="fas fa-download me-2"></i>Сформировать
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Отчет по продажам</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Начальная дата</label>
+                    <input type="date" class="form-control" id="startDate">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Конечная дата</label>
+                    <input type="date" class="form-control" id="endDate">
+                </div>
+                <button class="btn btn-outline-success w-100" id="generateSalesReport">
+                    <i class="fas fa-download me-2"></i>Сформировать
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Отчет за квартал</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Год</label>
+                    <select class="form-select" id="yearSelect">
+                        {% for year in range(2020, 2025) %}
+                        <option value="{{ year }}" {% if year == 2024 %}selected{% endif %}>{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Квартал</label>
+                    <select class="form-select" id="quarterSelect">
+                        <option value="1">1 квартал</option>
+                        <option value="2">2 квартал</option>
+                        <option value="3">3 квартал</option>
+                        <option value="4">4 квартал</option>
+                    </select>
+                </div>
+                <button class="btn btn-outline-info w-100" id="generateQuarterlyReport">
+                    <i class="fas fa-download me-2"></i>Сформировать
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Результаты отчета</h5>
+            </div>
+            <div class="card-body">
+                <div id="reportResults">
+                    <p class="text-muted">Выберите отчет для отображения данных</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/reports.js') }}"></script>
+{% endblock %}

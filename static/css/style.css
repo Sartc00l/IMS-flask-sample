@@ -1,0 +1,305 @@
+/* Custom styles for Computer Salon */
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 1rem 1.25rem;
+    border-radius: 0.5rem 0.5rem 0 0 !important;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    background-color: #f8f9fa;
+}
+
+.btn {
+    border-radius: 0.375rem;
+    font-weight: 500;
+}
+
+.alert {
+    border-radius: 0.375rem;
+    border: none;
+}
+
+.badge {
+    font-size: 0.75em;
+    border-radius: 0.375rem;
+}
+
+/* Custom table styles */
+.table-responsive {
+    border-radius: 0.375rem;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Modal styles */
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+}
+
+/* Chart container */
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+/* Report styles */
+.report-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.report-table th {
+    background-color: #e9ecef;
+    font-weight: 600;
+}
+
+/* Login page styles */
+.login-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Dashboard stats */
+.card .card-body .card-title {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.stats-card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.stats-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Navigation styles */
+.navbar-nav .nav-link {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    margin: 0.1rem 0;
+    transition: background-color 0.2s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Form styles */
+.form-control, .form-select {
+    border-radius: 0.375rem;
+    border: 1px solid #ced4da;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Tooltip styles */
+.tooltip {
+    font-size: 0.875rem;
+}
+
+/* Badge styles */
+.badge {
+    font-size: 0.7em;
+    padding: 0.35em 0.65em;
+}
+
+/* Action buttons */
+.btn-action {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Search box */
+.search-box {
+    position: relative;
+}
+
+.search-box .form-control {
+    padding-left: 2.5rem;
+}
+
+.search-box .search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+/* Status indicators */
+.status-low {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.status-medium {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+.status-high {
+    color: #198754;
+    font-weight: 600;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    border: 0.25em solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spinner-border 0.75s linear infinite;
+}
+
+@keyframes spinner-border {
+    to { transform: rotate(360deg); }
+}
+
+/* Print styles for reports */
+@media print {
+    .navbar, .btn, .modal, .card-header .btn, .no-print {
+        display: none !important;
+    }
+    
+    .card {
+        border: none;
+        box-shadow: none;
+        margin-bottom: 0;
+    }
+    
+    .card-header {
+        background-color: white !important;
+        border-bottom: 2px solid #333;
+    }
+    
+    body {
+        background: white !important;
+    }
+    
+    .container {
+        max-width: none !important;
+        padding: 0 !important;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .card .card-body .card-title {
+        font-size: 1.5rem;
+    }
+    
+    .btn {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Animation for alerts */
+.alert {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hover effects */
+.btn-hover {
+    transition: all 0.3s ease;
+}
+
+.btn-hover:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Custom checkbox and radio */
+.form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}

@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+
+{% block title %}Управление инвентарем{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4"><i class="fas fa-boxes me-2"></i>Управление инвентарем</h1>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Список товаров</h5>
+                {% if current_user.has_permission('add') %}
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addItemModal">
+                    <i class="fas fa-plus me-2"></i>Добавить товар
+                </button>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="inventoryTable">
+                        <thead>
+                            <tr>
+                                <th>Дата поступления</th>
+                                <th>№ Документа</th>
+                                <th>Поставщик</th>
+                                <th>Тип</th>
+                                <th>Производитель</th>
+                                <th>Модель</th>
+                                <th>Количество</th>
+                                <th>Цена закупки</th>
+                                <th>Цена продажи</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr>
+                                <td>{{ item.receipt_date.strftime('%d.%m.%Y') }}</td>
+                                <td>{{ item.document_number }}</td>
+                                <td>{{ item.supplier.name }}</td>
+                                <td>{{ item.component_type }}</td>
+                                <td>{{ item.manufacturer }}</td>
+                                <td>{{ item.model }}</td>
+                                <td>
+                                    <span class="badge {% if item.quantity < 5 %}bg-warning{% else %}bg-success{% endif %}">
+                                        {{ item.quantity }}
+                                    </span>
+                                </td>
+                                <td>{{ "%.2f"|format(item.purchase_price) }} руб.</td>
+                                <td>{{ "%.2f"|format(item.selling_price) }} руб.</td>
+                                <td>
+                                    {% if current_user.has_permission('edit') %}
+                                    <button class="btn btn-sm btn-outline-primary edit-item" 
+                                            data-item-id="{{ item.id }}"
+                                            data-bs-toggle="tooltip" title="Редактировать">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    {% endif %}
+                                    {% if current_user.has_permission('delete') %}
+                                    <button class="btn btn-sm btn-outline-danger delete-item" 
+                                            data-item-id="{{ item.id }}"
+                                            data-bs-toggle="tooltip" title="Удалить">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно добавления товара -->
+<div class="modal fade" id="addItemModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Добавить новый товар</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="addItemForm">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Дата поступления *</label>
+                                <input type="date" class="form-control" name="receipt_date" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Номер документа *</label>
+                                <input type="text" class="form-control" name="document_number" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Поставщик *</label>
+                                <select class="form-select" name="supplier_id" required>
+                                    <option value="">Выберите поставщика</option>
+                                    {% for supplier in suppliers %}
+                                    <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Тип комплектующего *</label>
+                                <select class="form-select" name="component_type" required>
+                                    <option value="">Выберите тип</option>
+                                    <option value="Процессор">Процессор</option>
+                                    <option value="Видеокарта">Видеокарта</option>
+                                    <option value="Оперативная память">Оперативная память</option>
+                                    <option value="Материнская плата">Материнская плата</option>
+                                    <option value="Жесткий диск">Жесткий диск</option>
+                                    <option value="SSD">SSD</option>
+                                    <option value="Блок питания">Блок питания</option>
+                                    <option value="Корпус">Корпус</option>
+                                    <option value="Монитор">Монитор</option>
+                                    <option value="Клавиатура">Клавиатура</option>
+                                    <option value="Мышь">Мышь</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Производитель *</label>
+                                <input type="text" class="form-control" name="manufacturer" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Модель *</label>
+                                <input type="text" class="form-control" name="model" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Количество *</label>
+                                <input type="number" class="form-control" name="quantity" min="1" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Цена закупки (руб.) *</label>
+                                <input type="number" step="0.01" class="form-control" name="purchase_price" min="0" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Цена продажи (руб.) *</label>
+                                <input type="number" step="0.01" class="form-control" name="selling_price" min="0" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Добавить товар</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно редактирования товара -->
+<div class="modal fade" id="editItemModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Редактировать товар</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="editItemForm">
+                <div class="modal-body">
+                    <input type="hidden" name="item_id" id="editItemId">
+                    <!-- Та же структура формы, что и в добавлении -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Дата поступления *</label>
+                                <input type="date" class="form-control" name="receipt_date" id="editReceiptDate" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Номер документа *</label>
+                                <input type="text" class="form-control" name="document_number" id="editDocumentNumber" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Поставщик *</label>
+                                <select class="form-select" name="supplier_id" id="editSupplierId" required>
+                                    <option value="">Выберите поставщика</option>
+                                    {% for supplier in suppliers %}
+                                    <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Тип комплектующего *</label>
+                                <select class="form-select" name="component_type" id="editComponentType" required>
+                                    <option value="">Выберите тип</option>
+                                    <option value="Процессор">Процессор</option>
+                                    <option value="Видеокарта">Видеокарта</option>
+                                    <option value="Оперативная память">Оперативная память</option>
+                                    <option value="Материнская плата">Материнская плата</option>
+                                    <option value="Жесткий диск">Жесткий диск</option>
+                                    <option value="SSD">SSD</option>
+                                    <option value="Блок питания">Блок питания</option>
+                                    <option value="Корпус">Корпус</option>
+                                    <option value="Монитор">Монитор</option>
+                                    <option value="Клавиатура">Клавиатура</option>
+                                    <option value="Мышь">Мышь</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Производитель *</label>
+                                <input type="text" class="form-control" name="manufacturer" id="editManufacturer" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Модель *</label>
+                                <input type="text" class="form-control" name="model" id="editModel" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Количество *</label>
+                                <input type="number" class="form-control" name="quantity" id="editQuantity" min="1" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Цена закупки (руб.) *</label>
+                                <input type="number" step="0.01" class="form-control" name="purchase_price" id="editPurchasePrice" min="0" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Цена продажи (руб.) *</label>
+                                <input type="number" step="0.01" class="form-control" name="selling_price" id="editSellingPrice" min="0" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/inventory.js') }}"></script>
+{% endblock %}

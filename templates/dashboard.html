@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Главная панель{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4"><i class="fas fa-tachometer-alt me-2"></i>Главная панель</h1>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ total_items }}</h4>
+                        <p class="card-text">Товаров в инвентаре</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-boxes fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ total_sales }}</h4>
+                        <p class="card-text">Всего продаж</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-shopping-cart fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ low_stock }}</h4>
+                        <p class="card-text">Товаров с низким запасом</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-history me-2"></i>Последние продажи</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_sales %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Документ</th>
+                                <th>Покупатель</th>
+                                <th>Сумма</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sale in recent_sales %}
+                            <tr>
+                                <td>{{ sale.sale_date.strftime('%d.%m.%Y') }}</td>
+                                <td>{{ sale.document_number }}</td>
+                                <td>{{ sale.customer }}</td>
+                                <td>{{ "%.2f"|format(sale.total_amount) }} руб.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">Нет данных о продажах</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-cogs me-2"></i>Быстрые действия</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% if current_user.has_permission('add') %}
+                    <a href="{{ url_for('inventory_page') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-plus me-2"></i>Добавить товар
+                    </a>
+                    <a href="{{ url_for('sales_page') }}" class="btn btn-outline-success">
+                        <i class="fas fa-cash-register me-2"></i>Оформить продажу
+                    </a>
+                    {% endif %}
+                    {% if current_user.has_permission('reports') %}
+                    <a href="{{ url_for('reports_page') }}" class="btn btn-outline-info">
+                        <i class="fas fa-chart-bar me-2"></i>Сформировать отчет
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Информация о системе</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Версия:</strong> 1.0</p>
+                <p><strong>Пользователь:</strong> {{ current_user.full_name }}</p>
+                <p><strong>Роль:</strong> {{ current_user.role }}</p>
+                <p><strong>Дата:</strong> {{ now.strftime('%d.%m.%Y %H:%M') if now else '' }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Обновляем дату и время на главной странице
+    function updateDateTime() {
+        const now = new Date();
+        document.querySelector('.card-body p:last-child strong').nextSibling.textContent = 
+            ' ' + now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU');
+    }
+    
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+</script>
+{% endblock %}
